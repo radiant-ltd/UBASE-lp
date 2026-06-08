@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UBASE｜独立特化の実践コミュニティ — 名古屋</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#080e1c;
+  --navy-mid:#0f1929;
+  --navy-card:#141f32;
+  --navy-l:#1a2840;
+  --red:#c8102e;
+  --red-b:#e8142e;
+  --w:#f2f4f8;
+  --wd:rgba(242,244,248,.55);
+  --rule:rgba(242,244,248,.1);
+  --rules:rgba(242,244,248,.18);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--navy);color:var(--w);font-family:'Noto Sans JP',sans-serif;font-weight:300;line-height:1.8;overflow-x:hidden;font-size:14px;}
+
+/* ── CANVAS PARTICLES ── */
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.5;}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4;}
+
+.wrap{max-width:680px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+
+/* ── SECTION ── */
+section{padding:80px 0;border-bottom:1px solid var(--rule);position:relative;overflow:hidden;}
+section.alt{background:var(--navy-mid);}
+
+/* ── DIAGONAL DIVIDER ── */
+.skew-bottom{clip-path:polygon(0 0,100% 0,100% 90%,0 100%);}
+.skew-top{clip-path:polygon(0 10%,100% 0,100% 100%,0 100%);margin-top:-40px;}
+.skew-both{clip-path:polygon(0 5%,100% 0,100% 95%,0 100%);margin-top:-30px;margin-bottom:-30px;}
+
+/* ── ANIMATED GRADIENT BG for some sections ── */
+.grad-bg{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-l) 50%,var(--navy) 100%);background-size:200% 200%;animation:gradShift 8s ease infinite;}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* ── HERO ── */
+#hero{padding:0;border-bottom:none;position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;}
+.hero-video-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.hero-video-bg iframe{position:absolute;top:50%;left:50%;width:100vmax;height:100vmax;transform:translate(-50%,-50%) scale(1.1);opacity:.18;pointer-events:none;}
+.hero-video-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,14,28,.4) 0%,rgba(8,14,28,.75) 60%,var(--navy) 100%);}
+.hero-inner{position:relative;z-index:1;padding:120px 0 72px;}
+.logo-main{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,18vw,130px);letter-spacing:-.02em;line-height:.88;display:block;animation:fu .7s cubic-bezier(.22,1,.36,1) both .05s;}
+.logo-main .r{color:var(--red);text-shadow:0 0 60px rgba(200,16,46,.4);}
+.logo-sub{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.35em;color:var(--wd);text-transform:uppercase;display:block;margin-top:8px;margin-bottom:48px;animation:fu .7s ease both .2s;}
+.hero-h{font-weight:900;font-size:clamp(24px,5.5vw,40px);line-height:1.4;margin-bottom:14px;animation:fu .7s ease both .3s;}
+.hero-h .hl{color:var(--red);position:relative;display:inline-block;}
+.hero-h .hl::after{content:'';position:absolute;bottom:2px;left:0;right:0;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;animation:lineIn .6s ease both 1s;}
+@keyframes lineIn{to{transform:scaleX(1)}}
+.hero-p{font-size:13px;color:var(--wd);line-height:1.9;margin-bottom:32px;animation:fu .7s ease both .4s;}
+
+/* ── STATS with countup ── */
+.stats{display:flex;border:1px solid var(--rules);background:rgba(20,31,50,.85);backdrop-filter:blur(12px);margin-bottom:36px;animation:fu .7s ease both .5s;}
+.stat{flex:1;padding:18px 10px;border-right:1px solid var(--rule);text-align:center;}
+.stat:last-child{border-right:none;}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:28px;display:block;line-height:1;}
+.stat-n .a{color:var(--red);}
+.stat-l{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.1em;color:var(--wd);text-transform:uppercase;display:block;margin-top:4px;}
+.count-num{display:inline-block;}
+
+/* ── SCROLL PROGRESS BAR ── */
+#progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:999;width:0%;transition:width .1s;box-shadow:0 0 8px rgba(200,16,46,.6);}
+
+/* ── BTN ── */
+.btn{display:block;background:var(--red);color:var(--w);font-weight:700;font-size:13px;letter-spacing:.07em;padding:18px 28px;border:none;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s;width:100%;text-align:center;font-family:'Noto Sans JP',sans-serif;position:relative;overflow:hidden;}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1) 0%,transparent 50%);opacity:0;transition:opacity .2s;}
+.btn:hover{background:var(--red-b);transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,16,46,.35);}
+.btn:hover::after{opacity:1;}
+.btn-note{display:block;font-size:10px;color:var(--wd);margin-top:8px;text-align:center;}
+.meta{display:flex;gap:16px;margin-top:36px;padding-top:22px;border-top:1px solid var(--rule);flex-wrap:wrap;animation:fu .7s ease both .76s;}
+.meta span{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--wd);text-transform:uppercase;}
+
+/* ── SECTION COMMON ── */
+.bar{width:32px;height:3px;background:var(--red);margin-bottom:28px;position:relative;}
+.bar::after{content:'';position:absolute;left:38px;top:0;width:12px;height:3px;background:var(--red);opacity:.4;}
+.slbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.28em;color:var(--wd);text-transform:uppercase;display:block;margin-bottom:10px;}
+.sh{font-weight:700;font-size:clamp(20px,4vw,28px);line-height:1.45;margin-bottom:28px;}
+
+/* ── EMPATHY ── */
+.el{list-style:none;}
+.el li{padding:16px 0;border-bottom:1px solid var(--rule);font-size:13px;color:var(--wd);display:flex;gap:12px;opacity:0;transform:translateX(-14px);transition:opacity .45s,transform .45s;}
+.el li.v{opacity:1;transform:none;}
+.el li:last-child{border-bottom:none;}
+.ed{color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;}
+.ec{margin-top:28px;font-weight:700;font-size:15px;}
+
+/* ── PROBLEM ── */
+.pi{font-size:13px;color:var(--wd);line-height:1.9;margin-bottom:22px;}
+.pi strong{color:var(--w);font-weight:700;}
+.ptbl{border:1px solid var(--rules);background:var(--navy-card);margin-bottom:22px;}
+.pr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--rule);}
+.pr:last-child{border-bottom:none;}
+.prc{font-size:13px;font-weight:500;}
+.prr{font-family:'Space Mono',monospace;font-size:10px;color:var(--red);text-align:right;white-space:nowrap;}
+.pcl{font-size:13px;color:var(--wd);line-height:1.9;}
+.pcl strong{color:var(--w);font-weight:700;}
+
+/* ── ANIMATED BAR CHART ── */
+.bar-chart{margin:28px 0;display:flex;flex-direction:column;gap:12px;}
+.bar-row{display:grid;grid-template-columns:120px 1fr 48px;align-items:center;gap:12px;}
+.bar-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--wd);letter-spacing:.08em;text-align:right;}
+.bar-track{background:var(--navy-card);height:8px;border-radius:0;overflow:hidden;}
+.bar-fill{height:100%;background:var(--red);width:0%;transition:width 1.2s cubic-bezier(.22,1,.36,1);border-radius:0;}
+.bar-fill.animated{/* triggered by JS */}
+.bar-pct{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red);line-height:1;}
+
+/* ── SOLUTION ── */
+.si{font-size:13px;color:var(--wd);line-height:1.9;margin-bottom:28px;}
+.pillars{display:grid;gap:3px;}
+.pillar{background:var(--navy-card);padding:22px 20px;display:grid;grid-template-columns:40px 1fr;gap:16px;align-items:start;opacity:0;transform:translateY(12px);transition:opacity .5s,transform .5s;border-left:2px solid transparent;}
+.pillar.v{opacity:1;transform:none;border-left-color:var(--red);}
+.pillar:hover{background:var(--navy-l);transition:background .2s,opacity .5s,transform .5s;}
+.pn{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--red);line-height:1;}
+.pt2{font-size:13px;font-weight:700;margin-bottom:4px;}
+.pb{font-size:12px;color:var(--wd);line-height:1.8;}
+
+/* ── REWARD ── */
+.ri{font-size:13px;color:var(--wd);line-height:1.9;margin-bottom:28px;}
+.snt{background:var(--navy-card);border:1px solid var(--rules);border-bottom:none;padding:12px 18px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--wd);text-transform:uppercase;}
+.sld{border:1px solid var(--rules);background:var(--navy-card);}
+.ss{display:grid;grid-template-columns:1fr auto;align-items:center;padding:20px 18px;border-bottom:1px solid var(--rule);gap:10px;position:relative;transition:background .2s;}
+.ss:hover{background:var(--navy-l);}
+.ss::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:transparent;transition:background .2s;}
+.ss.hi::before{background:var(--red);}
+.ssl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.13em;color:var(--wd);text-transform:uppercase;margin-bottom:3px;}
+.ssa{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;}
+.ss.hi .ssa{color:var(--red);}
+.ssu{font-size:11px;color:var(--wd);}
+.ssb{font-family:'Space Mono',monospace;font-size:9px;padding:4px 10px;border:1px solid var(--rules);color:var(--wd);letter-spacing:.08em;text-transform:uppercase;align-self:center;transition:border-color .2s,color .2s;}
+.ss.hi .ssb{border-color:var(--red);color:var(--red);}
+.beyond{padding:20px 18px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,rgba(200,16,46,.14) 0%,transparent 80%);border-top:1px solid rgba(200,16,46,.3);}
+.byt{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.13em;color:var(--wd);text-transform:uppercase;margin-bottom:3px;}
+.bym{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red);line-height:1;}
+.bys{font-size:11px;color:var(--wd);margin-top:2px;}
+.byar{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--red);opacity:.3;line-height:1;}
+.rn{margin-top:16px;padding:18px;background:var(--navy-card);border-left:3px solid var(--red);font-size:12px;color:var(--wd);line-height:1.85;}
+
+/* ── TRUST ── */
+.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:28px;}
+.ti{background:var(--navy-card);padding:22px 12px;text-align:center;transition:transform .2s,background .2s;cursor:default;}
+.ti:hover{transform:translateY(-3px);background:var(--navy-l);}
+.tn{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--red);display:block;line-height:1;margin-bottom:5px;}
+.tl{font-size:11px;color:var(--wd);line-height:1.6;}
+
+/* ── PROFILE ── */
+.pro{display:grid;grid-template-columns:90px 1fr;gap:22px;align-items:start;}
+.av{width:90px;height:90px;background:var(--navy-l);border:1px solid var(--rules);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}
+.avi{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--red);line-height:1;}
+.avn{font-family:'Space Mono',monospace;font-size:7px;color:var(--wd);letter-spacing:.1em;text-align:center;}
+.pf{font-family:'Space Mono',monospace;font-size:9px;color:var(--wd);letter-spacing:.16em;margin-bottom:3px;}
+.pname{font-weight:700;font-size:18px;margin-bottom:5px;}
+.ptitle{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.11em;color:var(--red);text-transform:uppercase;margin-bottom:12px;line-height:1.6;}
+.pbody{font-size:12px;color:var(--wd);line-height:1.85;}
+
+/* ── FIT ── */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.fc{background:var(--navy-card);padding:22px 18px;transition:transform .2s;}
+.fc:hover{transform:translateY(-2px);}
+.fct{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--rule);}
+.fc.yes .fct{color:var(--red);}
+.fc.no .fct{color:var(--wd);}
+.fll{list-style:none;}
+.fll li{font-size:12px;padding:8px 0;border-bottom:1px solid var(--rule);display:flex;gap:7px;color:var(--wd);line-height:1.6;}
+.fll li:last-child{border-bottom:none;}
+.fc.yes .fll li .mk{color:var(--red);}
+.fc.no .fll li .mk{color:var(--rules);}
+
+/* ── FAQ ENHANCED ── */
+.fql{display:flex;flex-direction:column;gap:3px;}
+.fqi{background:var(--navy-card);overflow:hidden;transition:background .2s;}
+.fqi:hover{background:var(--navy-l);}
+.fqq{padding:20px 18px;font-size:13px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;user-select:none;font-family:'Noto Sans JP',sans-serif;}
+.fqic{font-family:'Space Mono',monospace;font-size:16px;color:var(--red);flex-shrink:0;transition:transform .3s cubic-bezier(.22,1,.36,1);width:20px;text-align:center;}
+.fqi.op .fqic{transform:rotate(45deg);}
+.fqa{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,1,.36,1),padding .35s;padding:0 18px;font-size:12px;color:var(--wd);line-height:1.9;}
+.fqi.op .fqa{max-height:300px;padding:0 18px 20px;}
+.fqi.op{background:var(--navy-l);border-left:2px solid var(--red);}
+
+/* ── CLIENT RESULTS ── */
+.cr-intro{font-size:13px;color:var(--wd);line-height:1.9;margin-bottom:8px;}
+.cr-link{font-size:13px;font-weight:700;color:var(--w);line-height:1.9;margin-bottom:36px;display:block;}
+.cr-grid{display:grid;gap:3px;}
+.cr-card{background:var(--navy-card);border:1px solid var(--rules);overflow:hidden;opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+.cr-card.v{opacity:1;transform:none;}
+.cr-card:hover{border-color:rgba(200,16,46,.3);}
+.cr-card-head{padding:14px 18px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.cr-industry{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;}
+.cr-phase{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.1em;color:var(--wd);text-transform:uppercase;}
+.cr-body{display:grid;grid-template-columns:1fr 24px 1fr;align-items:stretch;}
+.cr-before,.cr-after{padding:20px 16px;}
+.cr-after{background:rgba(200,16,46,.05);}
+.cr-col-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.2em;color:var(--wd);text-transform:uppercase;margin-bottom:8px;display:block;}
+.cr-after .cr-col-label{color:var(--red);}
+.cr-num{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;margin-bottom:4px;display:block;}
+.cr-after .cr-num{color:var(--red);}
+.cr-desc{font-size:11px;color:var(--wd);line-height:1.65;}
+.cr-arrow{display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red);opacity:.5;border-left:1px solid var(--rule);border-right:1px solid var(--rule);}
+.cr-quote{padding:16px 18px;border-top:1px solid var(--rule);font-size:12px;color:var(--wd);line-height:1.8;font-style:italic;}
+.cr-quote::before{content:'"';color:var(--red);font-size:18px;font-style:normal;margin-right:4px;}
+
+/* ── LINE FLOW ── */
+.lf-steps{display:grid;gap:3px;counter-reset:step;}
+.lf-step{background:var(--navy-card);padding:22px 22px 22px 68px;position:relative;counter-increment:step;transition:transform .2s,background .2s;}
+.lf-step:hover{transform:translateX(4px);background:var(--navy-l);}
+.lf-step::before{content:counter(step,'decimal-leading-zero');position:absolute;left:16px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--red);opacity:.3;line-height:1;}
+.lf-step-title{font-size:13px;font-weight:700;margin-bottom:4px;}
+.lf-step-body{font-size:12px;color:var(--wd);line-height:1.75;}
+.lf-step.accent{border-left:2px solid var(--red);}
+.lf-step.accent .lf-step-title{color:var(--red);}
+.lf-step.accent::before{opacity:.6;}
+
+/* ── CLOSING ── */
+#closing{text-align:center;padding:100px 0;background:var(--navy-mid);border-bottom:none;}
+.ce{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.33em;color:var(--wd);text-transform:uppercase;display:block;margin-bottom:20px;}
+.ch{font-weight:900;font-size:clamp(22px,5vw,34px);line-height:1.45;margin-bottom:14px;}
+.cb{font-size:13px;color:var(--wd);line-height:1.9;margin-bottom:44px;max-width:340px;margin-left:auto;margin-right:auto;}
+
+footer{padding:32px 0;border-top:1px solid var(--rule);}
+.fi{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.flogo{font-family:'Bebas Neue',sans-serif;font-size:22px;}
+.flogo .r{color:var(--red);}
+.finf{font-family:'Space Mono',monospace;font-size:9px;color:var(--wd);letter-spacing:.1em;line-height:1.8;text-align:right;}
+
+/* ── FIXED CTA ── */
+.fcta{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--red);padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:10px;transform:translateY(100%);transition:transform .4s cubic-bezier(.22,1,.36,1);cursor:pointer;border:none;width:100%;font-family:'Noto Sans JP',sans-serif;box-shadow:0 -4px 24px rgba(200,16,46,.3);}
+.fcta.v{transform:translateY(0);}
+.fcta-t{font-weight:700;font-size:13px;color:var(--w);letter-spacing:.05em;}
+.fcta-a{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--w);opacity:.85;}
+
+/* ── REVEAL ANIMATIONS ── */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.rv.v{opacity:1;transform:none;}
+.rv-left{opacity:0;transform:translateX(-20px);transition:opacity .6s ease,transform .6s ease;}
+.rv-left.v{opacity:1;transform:none;}
+.rv-right{opacity:0;transform:translateX(20px);transition:opacity .6s ease,transform .6s ease;}
+.rv-right.v{opacity:1;transform:none;}
+.rv-scale{opacity:0;transform:scale(.95);transition:opacity .6s ease,transform .6s ease;}
+.rv-scale.v{opacity:1;transform:scale(1);}
+
+/* ── TEXT REVEAL ── */
+.char-reveal{overflow:hidden;display:inline-block;}
+.char-reveal span{display:inline-block;transform:translateY(110%);transition:transform .6s cubic-bezier(.22,1,.36,1);}
+.char-reveal.v span{transform:translateY(0);}
+
+/* ── MIDPAGE STOP ── */
+.midstop{padding:60px 0;background:var(--red);border-bottom:none;position:relative;overflow:hidden;}
+.midstop::before{content:'';position:absolute;top:-50%;right:-10%;width:300px;height:300px;border:1px solid rgba(255,255,255,.1);border-radius:50%;}
+.midstop::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+@media(max-width:560px){
+  .wrap{padding:0 16px;}
+  section{padding:60px 0;}
+  .fg{grid-template-columns:1fr;}
+  .pro{grid-template-columns:76px 1fr;gap:16px;}
+  .meta{gap:12px;}
+  .tg{grid-template-columns:repeat(3,1fr);}
+  .bar-row{grid-template-columns:90px 1fr 40px;}
+  .bar-label{font-size:8px;}
+}
+
+/* ── MARQUEE TICKER ── */
+.ticker-wrap{overflow:hidden;background:var(--red);padding:9px 0;position:relative;z-index:2;}
+.ticker{display:flex;width:max-content;animation:ticker 24s linear infinite;}
+.ticker:hover{animation-play-state:paused;}
+.ticker-item{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;color:#fff;text-transform:uppercase;padding:0 36px;white-space:nowrap;}
+.ticker-item::after{content:' ✦ ';opacity:.5;margin:0 12px;}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+
+/* ── SPLIT TEXT ── */
+.split-char{display:inline-block;opacity:0;transform:translateY(40px) rotate(3deg);transition:opacity .5s ease,transform .5s cubic-bezier(.22,1,.36,1);}
+.split-char.v{opacity:1;transform:none;}
+
+/* ── SLIDE DIRECTIONS ── */
+.slide-left{opacity:0;transform:translateX(-36px);transition:opacity .65s ease,transform .65s cubic-bezier(.22,1,.36,1);}
+.slide-left.v{opacity:1;transform:none;}
+.slide-right{opacity:0;transform:translateX(36px);transition:opacity .65s ease,transform .65s cubic-bezier(.22,1,.36,1);}
+.slide-right.v{opacity:1;transform:none;}
+.zoom-in{opacity:0;transform:scale(.88);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1);}
+.zoom-in.v{opacity:1;transform:scale(1);}
+.flip-up{opacity:0;transform:rotateX(30deg) translateY(20px);transform-origin:bottom;transition:opacity .6s ease,transform .6s ease;}
+.flip-up.v{opacity:1;transform:none;}
+
+/* ── RING CHART ── */
+.rings-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin:28px 0;}
+.ring-wrap{position:relative;width:110px;height:110px;flex-shrink:0;}
+.ring-svg{transform:rotate(-90deg);}
+.ring-circle-bg{fill:none;stroke:var(--navy-card);stroke-width:7;}
+.ring-circle{fill:none;stroke:var(--red);stroke-width:7;stroke-linecap:round;stroke-dasharray:290;stroke-dashoffset:290;transition:stroke-dashoffset 1.6s cubic-bezier(.22,1,.36,1);}
+.ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red);line-height:1;}
+.ring-lbl{font-family:'Space Mono',monospace;font-size:7px;color:var(--wd);letter-spacing:.08em;text-align:center;margin-top:2px;max-width:80px;line-height:1.4;}
+
+/* ── FLOATING BADGE ── */
+.float-badge{position:fixed;bottom:76px;right:14px;z-index:99;background:var(--navy-card);border:1px solid rgba(200,16,46,.4);padding:10px 14px;font-family:'Space Mono',monospace;font-size:8px;color:var(--w);letter-spacing:.1em;opacity:0;transform:translateX(90px);transition:opacity .5s ease,transform .5s cubic-bezier(.22,1,.36,1);max-width:155px;line-height:1.55;}
+.float-badge.v{opacity:1;transform:none;}
+.live-dot{width:5px;height:5px;background:var(--red);border-radius:50%;display:inline-block;margin-right:5px;animation:pulse 1.4s ease infinite;}
+
+/* ── RIPPLE DOT ── */
+.ripple-dot{width:10px;height:10px;background:var(--red);border-radius:50%;display:inline-block;box-shadow:0 0 0 0 rgba(200,16,46,.5);animation:ripple 2.2s ease infinite;}
+@keyframes ripple{0%{box-shadow:0 0 0 0 rgba(200,16,46,.45)}70%{box-shadow:0 0 0 12px rgba(200,16,46,0)}100%{box-shadow:0 0 0 0 rgba(200,16,46,0)}}
+
+
+/* ── ORBS ── */
+.orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;}
+.orb-red{background:rgba(200,16,46,.15);animation:float 9s ease infinite;}
+.orb-blue{background:rgba(20,60,120,.2);animation:float 11s ease infinite reverse;}
+
+/* ── NUMBER FLASH ── */
+@keyframes numFlash{0%,100%{color:var(--red)}50%{color:#ff6680}}
+.num-flash{animation:numFlash 2s ease infinite;}
+
+@media(max-width:560px){
+  .wrap{padding:0 16px;}
+  section{padding:60px 0;}
+  .fg{grid-template-columns:1fr;}
+  .pro{grid-template-columns:76px 1fr;gap:16px;}
+  .meta{gap:12px;}
+  .tg{grid-template-columns:repeat(3,1fr);}
+  .bar-row{grid-template-columns:86px 1fr 38px;}
+  .bar-label{font-size:8px;}
+  .float-badge{display:none;}
+  .rings-row{gap:10px;}
+  .ring-wrap{width:90px;height:90px;}
+  .ring-num{font-size:22px;}
+}
+
+/* ══ MOBILE-FIRST ANIMATIONS ══════════════════════════════ */
+
+/* ── PULSE GLOW on red elements ── */
+@keyframes glowPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(200,16,46,0)}
+  50%{box-shadow:0 0 16px 4px rgba(200,16,46,.25)}
+}
+.glow-pulse{animation:glowPulse 2.8s ease infinite;}
+
+/* ── BOUNCE ATTENTION ── */
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  40%{transform:translateY(-8px)}
+  60%{transform:translateY(-4px)}
+}
+.bounce{animation:bounce 2.4s ease infinite;}
+
+/* ── SHAKE ── */
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-3px)}
+  40%{transform:translateX(3px)}
+  60%{transform:translateX(-2px)}
+  80%{transform:translateX(2px)}
+}
+.shake{animation:shake .5s ease;}
+
+/* ── WAVE TEXT (stagger children) ── */
+.wave-text span{display:inline-block;animation:waveChar 1.8s ease infinite;}
+.wave-text span:nth-child(1){animation-delay:.0s}
+.wave-text span:nth-child(2){animation-delay:.08s}
+.wave-text span:nth-child(3){animation-delay:.16s}
+.wave-text span:nth-child(4){animation-delay:.24s}
+.wave-text span:nth-child(5){animation-delay:.32s}
+@keyframes waveChar{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+/* ── SCROLL SNAP FEEL: section entrance ── */
+.snap-enter{opacity:0;transform:translateY(32px) scale(.98);transition:opacity .55s cubic-bezier(.22,1,.36,1),transform .55s cubic-bezier(.22,1,.36,1);}
+.snap-enter.v{opacity:1;transform:none;}
+
+/* ── NUMBER COUNTER BOX ── */
+.count-box{text-align:center;padding:24px 16px;background:var(--navy-card);border:1px solid var(--rules);position:relative;overflow:hidden;}
+.count-box::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,16,46,.06) 0%,transparent 60%);}
+.count-box-num{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--red);line-height:1;display:block;}
+.count-box-unit{font-family:'Space Mono',monospace;font-size:9px;color:var(--wd);letter-spacing:.2em;text-transform:uppercase;margin-top:4px;display:block;}
+
+/* ── SWIPE HINT (mobile only) ── */
+@keyframes swipeHint{0%,100%{transform:translateX(0);opacity:.6}50%{transform:translateX(8px);opacity:1}}
+.swipe-hint{display:none;}
+@media(max-width:640px){
+  .swipe-hint{display:flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:8px;color:var(--wd);letter-spacing:.12em;margin-bottom:12px;}
+  .swipe-arrow{animation:swipeHint 1.8s ease infinite;}
+}
+
+/* ── HIGHLIGHT FLASH on scroll ── */
+@keyframes highlightIn{
+  0%{background:rgba(200,16,46,.25)}
+  100%{background:transparent}
+}
+.highlight-flash{animation:highlightIn 1.2s ease forwards;}
+
+/* ── SLIDE FROM BOTTOM (stronger than rv) ── */
+.pop-up{opacity:0;transform:translateY(48px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.pop-up.v{opacity:1;transform:none;}
+
+/* ── STAGGER CASCADE ── */
+.cascade > *{opacity:0;transform:translateY(20px);transition:opacity .45s ease,transform .45s cubic-bezier(.22,1,.36,1);}
+.cascade.v > *:nth-child(1){opacity:1;transform:none;transition-delay:.05s}
+.cascade.v > *:nth-child(2){opacity:1;transform:none;transition-delay:.15s}
+.cascade.v > *:nth-child(3){opacity:1;transform:none;transition-delay:.25s}
+.cascade.v > *:nth-child(4){opacity:1;transform:none;transition-delay:.35s}
+.cascade.v > *:nth-child(5){opacity:1;transform:none;transition-delay:.45s}
+.cascade.v > *:nth-child(n+6){opacity:1;transform:none;transition-delay:.55s}
+
+/* ── TYPEWRITER CURSOR ── */
+.cursor-blink::after{content:'|';color:var(--red);animation:blink .7s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── LINE DRAW ── */
+.line-draw{width:0;height:2px;background:var(--red);transition:width 1s cubic-bezier(.22,1,.36,1);}
+.line-draw.v{width:100%;}
+
+/* ── STAT FLIP ── */
+@keyframes flipIn{
+  0%{transform:rotateX(-90deg);opacity:0}
+  100%{transform:rotateX(0);opacity:1}
+}
+.flip-stat{animation:flipIn .6s cubic-bezier(.22,1,.36,1) both;}
+
+/* ── MOBILE PERF: reduce particles ── */
+@media(max-width:640px){
+  #particles{opacity:.25;}
+}
+/* ── MOBILE READABILITY ── */
+@media(max-width:560px){
+  .cr-body{grid-template-columns:1fr;gap:0;}
+  .cr-arrow{display:none;}
+  .cr-before,.cr-after{padding:16px 14px;}
+  .bar-row{grid-template-columns:80px 1fr 40px;}
+  section{padding:56px 0;}
+  .sh{font-size:clamp(18px,4.5vw,24px);}
+  .pi,.si,.ri{font-size:12px;}
+  .sld .ss{padding:14px 14px;}
+  .ssa{font-size:26px;}
+  .phase{padding:22px 18px 22px 28px;}
+  .beyond{flex-direction:column;gap:4px;}
+  .byar{display:none;}
+  .lf-step{padding:18px 18px 18px 56px;}
+  .lf-step::before{font-size:28px;left:12px;}
+  .count-box{padding:18px 10px;}
+  .count-box-num{font-size:40px;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="float-badge" id="float-badge">
+  <span class="live-dot"></span>今期の残り枠<br>あとわずか
+</div>
+
+<div id="progress-bar"></div>
+
+<a href="https://lin.ee/SdscxoK" class="fcta" id="fcta" style="text-decoration:none;">
+  <span class="fcta-t">LINEで詳細を受け取る</span>
+  <span class="fcta-a bounce">↗</span>
+</a>
+
+<!-- HERO with video bg -->
+<section id="hero">
+  <div class="hero-video-bg">
+    <iframe src="https://player.vimeo.com/video/1191024711?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" frameborder="0" allow="autoplay; fullscreen"></iframe>
+  </div>
+<div class="wrap hero-inner">
+  <span class="logo-sub" style="animation:fu .5s ease both .05s;">独立特化の実践コミュニティ — Nagoya</span>
+
+  <!-- HERO: ¥0 IMPACT + QUESTION + HEADLINE -->
+  <div style="margin:8px 0 16px;animation:fu .7s ease both .15s;">
+    <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.28em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:6px;">参画費用</span>
+    <span id="hero-zero" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,22vw,150px);line-height:.85;color:var(--w);display:block;letter-spacing:-.03em;text-shadow:0 0 80px rgba(200,16,46,.3);">¥0</span>
+    <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--wd);text-transform:uppercase;display:block;margin-top:6px;">スキルも経験も不要</span>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;margin-bottom:24px;padding:10px 14px;background:rgba(200,16,46,.08);border-left:2px solid var(--red);">
+      <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--red);flex-shrink:0;">WHY</span>
+      <span style="font-size:12px;color:var(--wd);line-height:1.6;">あなたが稼げない限り私たちに利益はない。だから本気で育てる。これが¥0の理由です。</span>
+    </div>
+    <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.28em;color:var(--wd);text-transform:uppercase;display:block;margin-bottom:12px;">変わりたいと思い続けて、何年経ちましたか。</span>
+    <h1 class="hero-h" style="margin:0 0 8px;font-size:clamp(28px,6vw,56px);line-height:1.15;">
+      変われなかったのは、<br><span class="hl">あなたのせいじゃない。</span>
+    </h1>
+  </div>
+
+  <!-- SUBHEADLINE -->
+  <p class="hero-p" style="font-size:13px;color:var(--wd);line-height:1.85;margin-bottom:24px;animation:fu .7s ease both .4s;">環境が変われば、人は変わる。<br>現場で稼ぎながら、現場で育つ。<br>どんなビジネスでも戦える基礎力を、名古屋で手に入れる。</p>
+
+  <!-- 3 PILLS -->
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;animation:fu .7s ease both .48s;">
+    <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--red);border:1px solid rgba(200,16,46,.4);padding:5px 12px;text-transform:uppercase;">参画費用 ¥0</span>
+    <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--wd);border:1px solid var(--rules);padding:5px 12px;text-transform:uppercase;">現場で稼ぎながら育つ</span>
+    <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--wd);border:1px solid var(--rules);padding:5px 12px;text-transform:uppercase;">独立特化コミュニティ</span>
+    <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--wd);border:1px solid var(--rules);padding:5px 12px;text-transform:uppercase;">名古屋 / 業務委託</span>
+  </div>
+
+  <div style="animation:fu .7s ease both .56s;">
+    <a href="https://lin.ee/SdscxoK" class="btn glow-pulse" style="text-decoration:none;display:block;">LINEで詳細を受け取る</a>
+    <span class="btn-note">合う人だけ、面接でお待ちしています。</span>
+  </div>
+  <div class="meta" style="animation:fu .7s ease both .64s;">
+    <span>Nagoya</span><span>業務委託</span><span>参画費用¥0</span><span>独立特化コミュニティ</span>
+  </div>
+</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">参画費用 ¥0</span>
+    <span class="ticker-item">独立特化の実践コミュニティ</span>
+    <span class="ticker-item">名古屋 / 業務委託</span>
+    <span class="ticker-item">現場で稼ぎながら現場で育つ</span>
+    <span class="ticker-item">週1個別マネジメント</span>
+    <span class="ticker-item">どんな事業でも戦える基礎力</span>
+    <span class="ticker-item">参画費用 ¥0</span>
+    <span class="ticker-item">独立特化の実践コミュニティ</span>
+    <span class="ticker-item">名古屋 / 業務委託</span>
+    <span class="ticker-item">現場で稼ぎながら現場で育つ</span>
+    <span class="ticker-item">週1個別マネジメント</span>
+    <span class="ticker-item">どんな事業でも戦える基礎力</span>
+  </div>
+</div>
+
+<!-- EMPATHY -->
+<section class="alt">
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">01</span>
+  <h2 class="sh">こんなこと、思っていませんか？</h2>
+  <ul class="el cascade">
+    <li><span class="ed">—</span>一度独立を試みたが、結果が出ず諦めた経験がある</li>
+    <li><span class="ed">—</span>変わりたいと思い続けているのに、3ヶ月前と何も変わっていない</li>
+    <li><span class="ed">—</span>高いお金を払ってスクールに通ったが、現場では通用しなかった</li>
+    <li><span class="ed">—</span>キャッシュが回らなくなり、結果が出る前に諦めざるを得なかった</li>
+    <li><span class="ed">—</span>頑張っているのに、なぜか前に進めない。自分に自信が持てない</li>
+    <li><span class="ed">—</span>特定の仕事でしか使えないスキルしか身についていない気がする</li>
+  </ul>
+  <p class="ec rv">一つでも当てはまるなら、続きを読んでください。</p>
+</div>
+</section>
+
+
+<!-- PERSONA B 直接語りかけ -->
+<section style="background:var(--navy);padding:72px 0;border-bottom:1px solid var(--rule);">
+<div class="wrap">
+  <div class="rv" style="max-width:560px;">
+    <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.32em;color:var(--red);text-transform:uppercase;margin-bottom:20px;">— 一度諦めたことがある人へ</p>
+    <h2 style="font-weight:900;font-size:clamp(22px,4.5vw,32px);line-height:1.4;margin-bottom:20px;">スクールに行ったのに変われなかった。<br>挑戦したのに、続かなかった。<br><span style="color:var(--red);">それは、あなたが弱かったんじゃない。</span></h2>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--red);flex-shrink:0;margin-top:3px;">—</span>
+        <p style="font-size:13px;color:var(--wd);line-height:1.9;">高いお金を払ってスキルを学んでも、現場に出た瞬間から一人になった。誰も助けてくれなかった。キャッシュが回らなくなって、諦めるしかなかった。</p>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--red);flex-shrink:0;margin-top:3px;">—</span>
+        <p style="font-size:13px;color:var(--wd);line-height:1.9;">お金がなくてスクールに入れなかった。正しいやり方を教えてくれる環境がなかった。だから変われなかった。</p>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--red);flex-shrink:0;margin-top:3px;">—</span>
+        <p style="font-size:13px;color:var(--wd);line-height:1.9;"><strong style="color:var(--w);">どちらも、環境の問題です。</strong>意志でも才能でもない。正しい環境さえあれば、あなたは変われる。UBASEはその確信のもとに作られています。</p>
+      </div>
+    </div>
+    <div style="margin-top:28px;padding:20px 22px;background:rgba(200,16,46,.07);border-left:3px solid var(--red);">
+      <p style="font-size:14px;font-weight:700;color:var(--w);line-height:1.7;">一度諦めた人が、一番強くなる。<br><span style="color:var(--red);">UBASEはそれを何度も見てきました。</span></p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- DIFFERENCE（核心・新設） -->
+<section style="background:var(--navy);padding:80px 0;border-bottom:1px solid var(--rule);">
+<div class="wrap">
+  <div class="bar rv"></div>
+  <span class="slbl rv">THE DIFFERENCE</span>
+  <h2 class="sh snap-enter">他と、<span style="color:var(--red);">決定的に違う</span>点。</h2>
+  <div class="rv" style="background:rgba(200,16,46,.07);border:1px solid rgba(200,16,46,.35);padding:36px 28px;position:relative;overflow:hidden;margin-bottom:3px;">
+    <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:var(--red);"></div>
+    <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--red);text-transform:uppercase;margin-bottom:16px;">Core Difference</p>
+    <p style="font-size:clamp(18px,3.5vw,26px);font-weight:900;line-height:1.4;margin-bottom:16px;">他のスクールは、<span style="color:var(--red);">教室で終わる。</span><br>UBASEは、現場で稼ぎながら<span style="color:var(--red);">現場で育つ。</span></p>
+    <p style="font-size:13px;color:var(--wd);line-height:1.9;">高額なスクールでスキルを学んでも、現場に出た瞬間から一人の戦いになります。キャッシュが回らなくなり、結果が出る前に諦めざるを得ない。それが多くの人の現実です。UBASEは違います。現場稼働をして日当を稼ぎながら、スキルと在り方を両軸で鍛え続ける。育ち切るまで、一人にしない。</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;" class="rv">
+    <div style="background:var(--navy-card);padding:24px 20px;opacity:.7;">
+      <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:rgba(242,244,248,.35);text-transform:uppercase;margin-bottom:14px;">一般的なスクール</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-size:12px;color:var(--wd);display:flex;gap:8px;"><span style="color:rgba(242,244,248,.2);flex-shrink:0;">✕</span>高額な受講料が必要</li>
+        <li style="font-size:12px;color:var(--wd);display:flex;gap:8px;"><span style="color:rgba(242,244,248,.2);flex-shrink:0;">✕</span>スキルだけ教えて現場は一人</li>
+        <li style="font-size:12px;color:var(--wd);display:flex;gap:8px;"><span style="color:rgba(242,244,248,.2);flex-shrink:0;">✕</span>キャッシュが尽きて諦める</li>
+        <li style="font-size:12px;color:var(--wd);display:flex;gap:8px;"><span style="color:rgba(242,244,248,.2);flex-shrink:0;">✕</span>特定の事業にしか使えない</li>
+      </ul>
+    </div>
+    <div style="background:rgba(200,16,46,.08);border:1px solid rgba(200,16,46,.25);padding:24px 20px;">
+      <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:14px;">UBASE</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-size:12px;color:var(--w);font-weight:700;display:flex;gap:8px;"><span style="color:var(--red);flex-shrink:0;">✓</span>初期・月額・管理費すべて¥0</li>
+        <li style="font-size:12px;color:var(--w);font-weight:700;display:flex;gap:8px;"><span style="color:var(--red);flex-shrink:0;">✓</span>現場で稼ぎながら同時に育成</li>
+        <li style="font-size:12px;color:var(--w);font-weight:700;display:flex;gap:8px;"><span style="color:var(--red);flex-shrink:0;">✓</span>日当発生でキャッシュが止まらない</li>
+        <li style="font-size:12px;color:var(--w);font-weight:700;display:flex;gap:8px;"><span style="color:var(--red);flex-shrink:0;">✓</span>どんな事業でも戦える原理原則</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<!-- IMPACT BLOCK 1 (after empathy) -->
+<div style="background:var(--navy);padding:0;overflow:hidden;">
+  <div style="background:var(--navy-card);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:48px 0;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(200,16,46,.07) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="wrap" style="position:relative;z-index:1;">
+      <p style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.3em;color:var(--wd);text-transform:uppercase;margin-bottom:12px;" class="rv">— 他のスクールとの比較</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;max-width:400px;margin:0 auto 20px;" class="rv">
+        <div style="background:rgba(255,255,255,.04);padding:18px 12px;text-align:center;border:1px solid var(--rule);">
+          <p style="font-family:'Space Mono',monospace;font-size:8px;color:var(--wd);letter-spacing:.12em;margin-bottom:6px;">一般的なスクール</p>
+          <p style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--wd);line-height:1.1;">¥300,000<br>〜¥1,000,000</p>
+          <p style="font-size:10px;color:var(--wd);margin-top:4px;">先払い</p>
+        </div>
+        <div style="background:rgba(200,16,46,.1);padding:18px 12px;text-align:center;border:1px solid rgba(200,16,46,.3);">
+          <p style="font-family:'Space Mono',monospace;font-size:8px;color:var(--red);letter-spacing:.12em;margin-bottom:6px;">UBASE</p>
+          <p style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--red);line-height:1;">¥0</p>
+          <p style="font-size:10px;color:var(--wd);margin-top:4px;">完全無料</p>
+        </div>
+      </div>
+      <p style="font-size:13px;font-weight:700;color:var(--w);" class="rv">変われなかったのは、<br>あなたのせいじゃない。<br><span style="color:var(--red);">環境が間違っていただけです。</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section>
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">02</span>
+  <h2 class="sh">なぜ、一歩が踏み出せないのか。</h2>
+  <p class="pi">独立の壁は「スキル・お金・時間」ではありません。本当の壁は、<strong>信頼できる環境がない</strong>ということです。</p>
+  <div class="ptbl rv">
+    <div class="pr"><span class="prc">スキルだけ教えるスクール</span><span class="prr">売上に繋がらない</span></div>
+    <div class="pr"><span class="prc">コーチングで自己理解</span><span class="prr">スキルは無い</span></div>
+    <div class="pr"><span class="prc">怪しいビジネス・コミュニティ</span><span class="prr">依存と弱者を量産</span></div>
+  </div>
+  <p class="pcl rv"><strong>あなたが変われなかったのは、あなたのせいではない。</strong></p>
+</div>
+</section>
+
+<!-- SOLUTION -->
+<section class="alt">
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">03</span>
+  <h2 class="sh">だから、UBASEをつくりました。</h2>
+  <p class="si rv">やる気と素直さがあれば、独立に必要なスキル・経験・環境を全部UBASEが用意します。あなたは現場で稼ぎながら、力をつけるだけでいい。</p>
+  <div class="pillars">
+    <div class="pillar"><div class="pn">01</div><div><div class="pt2">現場での実践</div><div class="pb">フィールドセールスの案件に携わりながら、実践の中で営業力・対話力を磨けます。</div></div></div>
+    <div class="pillar"><div class="pn">02</div><div><div class="pt2">週1回の体系的な研修</div><div class="pb">マーケティング・営業スキルをゼロから習得。他メンバーと切磋琢磨できます。</div></div></div>
+    <div class="pillar"><div class="pn">03</div><div><div class="pt2">リアルタイムサポート</div><div class="pb">LINEでいつでも相談OK。困ったときに頼れる環境があります。</div></div></div>
+    <div class="pillar"><div class="pn">04</div><div><div class="pt2">独立ロードマップ</div><div class="pb">ゴールから逆算した道筋を、UBASEが一緒に設計します。</div></div></div>
+  </div>
+</div>
+</section>
+
+<!-- WHY ZERO -->
+<section>
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">04</span>
+  <h2 class="sh">なぜ、参加費が<br>0円なのか。</h2>
+  <p class="si rv">正直に言います。私たちはボランティアではありません。</p>
+  <div class="rv" style="display:grid;gap:2px;">
+    <div style="background:var(--navy-card);padding:24px 20px;border-left:2px solid var(--red);">
+      <p style="font-size:15px;font-weight:700;color:var(--w);line-height:1.75;margin-bottom:16px;">あなたをプロに引き上げ、<br>共に現場で価値を生み出すことで<br>利益を得るビジネスモデルだからです。</p>
+      <p style="font-size:13px;color:var(--wd);line-height:1.9;">あなたが稼げない限り、私たちに利益はありません。<br>だから本気で育てます。これが私たちの投資です。</p>
+    </div>
+    <div style="background:var(--navy-card);padding:24px 20px;display:grid;grid-template-columns:1fr 1fr;gap:2px;">
+      <div style="padding-right:16px;border-right:1px solid var(--rule);">
+        <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:8px;">スクールとの違い</p>
+        <p style="font-size:12px;color:var(--wd);line-height:1.75;">受講料を払って教わるだけ。結果が出なくても会社は痛くない。</p>
+      </div>
+      <div style="padding-left:16px;">
+        <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:8px;">UBASEの立場</p>
+        <p style="font-size:12px;color:var(--wd);line-height:1.75;">あなたが稼げなければ私たちも損をする。だから全力で伴走する。</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- MIDPAGE STOP -->
+<div class="midstop">
+<div class="wrap" style="padding:48px 24px;">
+  <div class="rv" style="position:relative;z-index:1;">
+    <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.32em;color:rgba(255,255,255,.65);text-transform:uppercase;margin-bottom:14px;">— 正直に言います</p>
+    <p style="font-weight:900;font-size:clamp(20px,4.5vw,30px);line-height:1.45;color:#fff;margin-bottom:16px;">マインドが変わると、<br>発言・表情・行動の全てが変わる。</p>
+    <p style="font-size:14px;font-weight:700;color:rgba(255,255,255,.9);line-height:1.85;margin-bottom:16px;">小手先のスキルは別の場所でも教えられます。UBASEは根本の<span style="text-decoration:underline;text-underline-offset:4px;">原理原則に重点を置きます。</span><br>だから業種・商材が変わっても戦い続けられる。</p>
+    <p style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.65);line-height:1.8;border-top:1px solid rgba(255,255,255,.2);padding-top:14px;">週1のマネジメントが始まった途端、月3件が安定した。<br>3ヶ月目には1日7件を超える日が出てきた。これが、環境の差です。</p>
+  </div>
+</div>
+</div>
+
+
+<!-- IMPACT BLOCK 2: full-screen message -->
+<div style="min-height:45vw;display:flex;align-items:center;justify-content:center;background:var(--red);position:relative;overflow:hidden;padding:64px 0;">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;border:1px solid rgba(255,255,255,.1);pointer-events:none;animation:float 8s ease infinite;"></div>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:400px;border-radius:50%;border:1px solid rgba(255,255,255,.08);pointer-events:none;animation:float 10s ease infinite reverse;"></div>
+  <div class="wrap" style="position:relative;z-index:1;text-align:center;">
+    <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.3em;color:rgba(255,255,255,.6);text-transform:uppercase;margin-bottom:20px;" class="rv">— UBASEで始めるために必要なもの</p>
+    <p style="font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,14vw,110px);color:#fff;line-height:1.15;letter-spacing:.04em;margin-bottom:20px;" class="rv">覚悟と<br>時間だけ。</p>
+    <p style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.9;max-width:340px;margin:0 auto;" class="rv">スキルも経験も資金も不要です。<br>必要なのはその2つだけ。<br>残りは全部、こちらが用意します。</p>
+  </div>
+</div>
+
+<!-- MID CTA after emotional peak -->
+<div style="background:var(--navy-mid);padding:48px 0;border-top:1px solid rgba(200,16,46,.2);">
+<div class="wrap rv" style="text-align:center;">
+  <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.28em;color:var(--red);text-transform:uppercase;margin-bottom:16px;">— 心が動いたなら、今すぐ</p>
+  <a href="https://lin.ee/SdscxoK" class="btn" style="text-decoration:none;display:block;max-width:480px;margin:0 auto;">LINEで詳細を受け取る</a>
+  <span class="btn-note" style="display:block;margin-top:8px;">合う人だけ、面接でお待ちしています。</span>
+</div>
+</div>
+
+<!-- COUNT BOXES -->
+<section style="padding:48px 0;background:var(--navy);border-bottom:1px solid var(--rule);">
+<div class="wrap">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;" class="cascade">
+    <div class="count-box glow-pulse">
+      <span class="count-box-num" data-count="8" data-suffix="">0</span>
+      <span class="count-box-unit">割以上<br>売上アップ率</span>
+    </div>
+    <div class="count-box glow-pulse" style="animation-delay:.4s">
+      <span class="count-box-num" data-count="0" data-prefix="¥">¥0</span>
+      <span class="count-box-unit">参画費用</span>
+    </div>
+    <div class="count-box glow-pulse" style="animation-delay:.8s">
+      <span class="count-box-num" data-count="180" data-suffix="">0</span>
+      <span class="count-box-unit">日<br>変化の期間</span>
+    </div>
+  </div>
+</div>
+</section>
+<!-- TIMELINE -->
+<section class="alt">
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">05</span>
+  <p style="font-size:12px;font-family:'Space Mono',monospace;letter-spacing:.15em;color:var(--red);text-transform:uppercase;margin-bottom:12px;" class="rv">— 実際に起きた変化</p>
+  <h2 class="sh slide-right">UBASEに入ると、<br>何が変わるのか。</h2>
+
+  <!-- REAL DATA CALLOUT -->
+  <div class="rv" style="background:var(--navy-card);border:1px solid rgba(200,16,46,.3);padding:20px 20px;margin-bottom:2px;">
+    <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:10px;">Real Data — 参加者の実例</p>
+    <p style="font-size:12px;color:var(--wd);line-height:1.85;">営業経験ほぼゼロでスタート。1ヶ月目はUBASEのマネジメントなしで現場に立ち、結果が出なかった。2ヶ月目から週1のマネジメントが始まった途端、<strong style="color:var(--w);">月3件獲得が安定。</strong>3ヶ月目には<strong style="color:var(--red);">1日7件を超える日</strong>が出てきた。</p>
+  </div>
+
+  <div class="rv" style="display:grid;gap:2px;">
+    <div style="background:var(--navy-card);padding:24px 20px;border-left:2px solid var(--rule);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--wd);text-transform:uppercase;">稼働 1ヶ月目</div>
+        <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--wd);letter-spacing:.1em;">マネジメント開始前</div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-size:13px;color:var(--wd);display:flex;gap:10px;"><span style="color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;">—</span>現場に立つが、結果はまだ出ない</li>
+        <li style="font-size:13px;color:var(--wd);display:flex;gap:10px;"><span style="color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;">—</span>自分の無力さと向き合う期間</li>
+        <li style="font-size:13px;color:var(--wd);display:flex;gap:10px;"><span style="color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;">—</span>それでも現場に立ち続けることが、土台になる</li>
+      </ul>
+    </div>
+    <div style="background:var(--navy-card);padding:24px 20px;border-left:2px solid var(--rule);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--wd);text-transform:uppercase;">稼働 2ヶ月目</div>
+        <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--red);letter-spacing:.1em;">週1マネジメント開始</div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-size:13px;color:var(--wd);display:flex;gap:10px;"><span style="color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;">—</span>週1の研修が始まった途端、結果が変わり始める</li>
+        <li style="font-size:13px;color:var(--wd);display:flex;gap:10px;"><span style="color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;">—</span>月3件の獲得が安定してくる</li>
+        <li style="font-size:13px;color:var(--wd);display:flex;gap:10px;"><span style="color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;">—</span>「このまま会社員でいいのか」が確信に変わり始める</li>
+      </ul>
+    </div>
+    <div style="background:var(--navy-card);padding:24px 20px;border-left:2px solid var(--red);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--red);text-transform:uppercase;">稼働 3ヶ月目</div>
+        <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--red);letter-spacing:.1em;">マネジメント 2ヶ月目</div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-size:13px;color:var(--wd);display:flex;gap:10px;"><span style="color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;">—</span>1日7件を超える日が出てくる</li>
+        <li style="font-size:13px;color:var(--wd);display:flex;gap:10px;"><span style="color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;">—</span>「自分にもできる」という根拠が生まれる</li>
+        <li style="font-size:13px;color:var(--w);font-weight:700;display:flex;gap:10px;"><span style="color:var(--red);font-family:'Space Mono',monospace;flex-shrink:0;">—</span>働く理由が、自分自身のために変わる。</li>
+      </ul>
+    </div>
+  </div>
+
+
+
+
+  <!-- BAR CHART: 成長の可視化 -->
+  <div class="bar-chart rv" style="margin-top:40px;background:var(--navy-card);padding:24px 20px;border:1px solid var(--rules);">
+    <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--red);text-transform:uppercase;margin-bottom:20px;">Growth Visualization — 研修後の成長率</p>
+    <div class="bar-row">
+      <span class="bar-label">行動量</span>
+      <div class="bar-track"><div class="bar-fill" data-pct="85"></div></div>
+      <span class="bar-pct" style="font-size:22px;">+85%</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">獲得件数</span>
+      <div class="bar-track"><div class="bar-fill" data-pct="70"></div></div>
+      <span class="bar-pct" style="font-size:22px;">+70%</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">思考の変化</span>
+      <div class="bar-track"><div class="bar-fill" data-pct="92"></div></div>
+      <span class="bar-pct" style="font-size:22px;">+92%</span>
+    </div>
+    <p style="font-family:'Space Mono',monospace;font-size:8px;color:var(--wd);margin-top:14px;letter-spacing:.08em;">※ 研修開始前後の比較 / 参画者の体感ベース</p>
+  </div>
+</div>
+</section>
+
+<!-- REWARD -->
+<section>
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">06</span>
+  <h2 class="sh">稼ぎながら、力をつける。</h2>
+  <p class="ri rv">育ち切る前にキャッシュが尽きて諦めた人を、私たちは何人も見てきました。UBASEがその構造を変えます。現場で稼ぎながら育つ。だから、諦めなくて済む。</p>
+  <div class="rv">
+    <div class="snt">日当ステップ / 実力で決まる報酬体系</div>
+    <div class="sld">
+      <div class="ss"><div><div class="ssl">研修期間 / 60日稼働 + 研修12回</div><div class="ssa">9,000<span class="ssu"> 円/日</span></div></div><div class="ssb">Start</div></div>
+      <div class="ss"><div><div class="ssl">プロ契約 / 研修修了後</div><div class="ssa">12,000<span class="ssu"> 円〜/日</span></div></div><div class="ssb">Pro</div></div>
+      <div class="ss hi"><div><div class="ssl">ハイパフォーマー / 15,000 → 18,000 →</div><div class="ssa">20,000<span class="ssu"> 円/日</span></div></div><div class="ssb">High</div></div>
+      <div class="beyond">
+        <div><div class="byt">その先は</div><div class="bym">あなたの実力次第</div><div class="bys">スキルと実績がそのまま収入になる</div></div>
+        <div class="byar">↑</div>
+      </div>
+    </div>
+  </div>
+  <div class="rn rv">週5日ペースのメンバーが最も早く結果を出しています。詳細はLINE公式内でご確認ください。</div>
+  <div style="margin-top:16px;padding:20px 22px;background:rgba(200,16,46,.07);border-left:3px solid var(--red);" class="rv">
+    <p style="font-size:13px;font-weight:700;color:var(--w);line-height:1.75;margin-bottom:6px;">数字より大事なことがあります。</p>
+    <p style="font-size:12px;color:var(--wd);line-height:1.85;">収入が上がることは結果であって、目的ではありません。UBASEが本当に変えたいのは、あなたの<strong style="color:var(--w);">マインド・発言・行動・表情</strong>です。それが変わったとき、収入は自然についてきます。</p>
+  </div>
+  <div style="margin-top:8px;padding:14px 16px;background:var(--navy-card);border-left:2px solid var(--rules);font-size:11px;color:var(--wd);line-height:1.85;" class="rv">※ 報酬サイクルは月末締め・翌々月頭払いです。稼働開始から最初の報酬受け取りまで最大2.5ヶ月かかります。参画前に生活資金が確保できるかをご確認ください。確保できない場合はご相談も可能です。<br>※ 交通費の扱いは現場により異なります。詳細はLINE公式内でご確認ください。</div>
+</div>
+</section>
+
+<!-- CLIENT RESULTS -->
+<section>
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">07</span>
+  <p style="font-size:12px;font-family:'Space Mono',monospace;letter-spacing:.15em;color:var(--red);text-transform:uppercase;margin-bottom:12px;" class="rv">— なぜ信頼できるのか、数字で見てください</p>
+  <h2 class="sh snap-enter">結果を出し続けられる<br>根拠があります。</h2>
+  <p class="cr-intro">UBASEのコンサルティングによる実績です。このノウハウをそのままUBASEの育成環境に落とし込んでいます。</p>
+
+  <div class="cr-grid">
+
+    <!-- CARD 1：ひなた氏 -->
+    <div class="cr-card rv">
+      <div class="cr-card-head">
+        <span class="cr-industry">心理カウンセリング系セッション</span>
+        <span class="cr-phase">支援期間：3ヶ月</span>
+      </div>
+      <div class="cr-body">
+        <div class="cr-before">
+          <span class="cr-col-label">Before</span>
+          <span class="cr-num">¥0</span>
+          <p class="cr-desc">営業経験ゼロ・セッション事業ゼロからのスタート。行動量の基準がなく、価格設定にも強い心理的ブロックがあった。</p>
+        </div>
+        <div class="cr-arrow">→</div>
+        <div class="cr-after">
+          <span class="cr-col-label">After</span>
+          <span class="cr-num">月収47万円</span>
+          <p class="cr-desc">3ヶ月目に人生最高収益を達成。RADIANTの想定期間（3〜6ヶ月）を大幅に上回るスピードで実現。</p>
+        </div>
+      </div>
+      <div class="cr-quote">「自分では想像できなかった視点や概念が入ってくる。それがAIでは得られない点だと感じています。」— ひなた氏</div>
+    </div>
+
+    <!-- CARD 2：高橋綾乃氏 -->
+    <div class="cr-card rv">
+      <div class="cr-card-head">
+        <span class="cr-industry">恋愛コンサルティング</span>
+        <span class="cr-phase">支援期間：約1年</span>
+      </div>
+      <div class="cr-body">
+        <div class="cr-before">
+          <span class="cr-col-label">Before</span>
+          <span class="cr-num">月商5万円</span>
+          <p class="cr-desc">7年間・10回以上のスクール・コミュニティを経験してもなお変われなかった状態。高額商品が一切売れない時期が続いた。</p>
+        </div>
+        <div class="cr-arrow">→</div>
+        <div class="cr-after">
+          <span class="cr-col-label">After</span>
+          <span class="cr-num">最高月商80万円</span>
+          <p class="cr-desc">コンサル翌月に15万円の高額サービスが初めて成約。名古屋に事務所を開設し、組織化フェーズへ移行。</p>
+        </div>
+      </div>
+      <div class="cr-quote">「冨永さんのコンサルは、受ければ魂に問いかけさせられます。強い想いでビジネスをしているのに売上が上がらない人に、ぜひ受けてほしい。」— 高橋氏</div>
+    </div>
+
+    <!-- CARD 3：宮谷由佳氏 -->
+    <div class="cr-card rv">
+      <div class="cr-card-head">
+        <span class="cr-industry">人材コンサルティング</span>
+        <span class="cr-phase">支援開始：2週間で変化</span>
+      </div>
+      <div class="cr-body">
+        <div class="cr-before">
+          <span class="cr-col-label">Before</span>
+          <span class="cr-num">自信なし</span>
+          <p class="cr-desc">起業1年目。「実績がない自分が提案していいのか」という心理的ブロックがあり、大手への提案を躊躇していた。</p>
+        </div>
+        <div class="cr-arrow">→</div>
+        <div class="cr-after">
+          <span class="cr-col-label">After</span>
+          <span class="cr-num">月平均+30%</span>
+          <p class="cr-desc">コンサル開始2週間で売上規模70〜80億円企業の研修契約を獲得。以降、月平均売上が30%増を継続達成。</p>
+        </div>
+      </div>
+      <div class="cr-quote">「自信がない方、実績がない方こそ、第三者の視点から自分のサービスを見てもらうことが大切です。」— 宮谷氏</div>
+    </div>
+
+  </div>
+
+  <!-- CTA after client results -->
+  <div class="rv" style="margin-top:32px;">
+    <a href="https://lin.ee/SdscxoK" class="btn" style="text-decoration:none;display:block;">LINEで詳細を受け取る</a>
+    <span class="btn-note">合う人だけ、面接でお待ちしています。</span>
+  </div>
+</div>
+</section>
+
+<!-- TRUST + PROFILE -->
+<section class="alt">
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">08</span>
+  <h2 class="sh">なぜ、信頼できるのか。</h2>
+  <div class="tg rv">
+    <div class="ti"><span class="tn">8割+</span><span class="tl">支援先で売上アップを実現</span></div>
+    <div class="ti"><span class="tn">複数</span><span class="tl">業種に関わらず成果を出し続ける</span></div>
+    <div class="ti"><span class="tn">原則</span><span class="tl">ビジネスの原理原則に基づく教育</span></div>
+  </div>
+  <div class="pro rv">
+    <div class="av"><div class="avi">TM</div><div class="avn">PHOTO<br>HERE</div></div>
+    <div>
+      <div class="pf">TOMINAGA MASASHI</div>
+      <div class="pname">冨永 昌</div>
+      <div class="ptitle">株式会社RADIANT 副代表<br>マーケティング顧問 コンサル担当</div>
+      <p class="pbody">法人・個人事業主向けマーケティング顧問として、支援先の8割以上で売上アップを実現。業種を問わず成果を出し続けてきた実績から、UBASEを立ち上げ独立志向の人材育成に取り組む。</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- PARTICIPANTS -->
+<section>
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">09</span>
+  <p style="font-size:12px;font-family:'Space Mono',monospace;letter-spacing:.15em;color:var(--red);text-transform:uppercase;margin-bottom:12px;" class="rv"><span class="ripple-dot" style="margin-right:8px;"></span>UBASEで起きた、リアルな変化</p>
+  <h2 class="sh slide-left">実際に参画した人の<br>数字が証明しています。</h2>
+  <p style="font-size:14px;color:var(--wd);line-height:1.85;margin-bottom:48px;" class="rv">「自分にできるのか」という不安は、やった人の数字が一番正直に答えてくれます。<br>UBASEはまだ走り出したばかりです。だからこそ、今入る人が最も手厚く育てられます。</p>
+
+  <!-- T.R：フルワイド・ドラマチックカード -->
+  <div class="rv" style="position:relative;background:var(--red);overflow:hidden;margin-bottom:16px;min-height:240px;">
+    <!-- 斜めアクセント -->
+    <div style="position:absolute;right:-60px;top:-40px;width:320px;height:320px;background:rgba(0,0,0,.15);transform:rotate(20deg);"></div>
+    <div style="position:absolute;right:60px;bottom:-80px;width:200px;height:200px;background:rgba(255,255,255,.06);transform:rotate(15deg);border-radius:4px;"></div>
+    <div style="position:relative;z-index:1;padding:36px 36px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px;">
+        <div style="flex:1;min-width:240px;">
+          <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.32em;color:rgba(255,255,255,.65);text-transform:uppercase;margin-bottom:10px;">MEMBER 01 — CURRENT STORY</p>
+          <p style="font-size:26px;font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-.01em;">T.R <span style="font-size:14px;font-weight:400;opacity:.7;">/ 20代</span></p>
+          <p style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.7);letter-spacing:.14em;margin-bottom:20px;">現場未経験・営業経験ゼロ</p>
+          <p style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.8;max-width:380px;">営業経験ゼロ・現場未経験にもかかわらず、<strong style="color:#fff;">初月28件を獲得。2ヶ月目は42件</strong>と更に伸長。未経験1〜2ヶ月目として突出した数字であり、他社経験者をすでに上回っています。UBASEの研修が数字に直結している現在進行形の事例です。</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:200px;">
+          <div style="background:rgba(0,0,0,.2);padding:20px 24px;text-align:center;">
+            <p style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.6);letter-spacing:.15em;margin-bottom:6px;">1ヶ月目</p>
+            <p style="font-size:28px;font-weight:900;color:#fff;line-height:1;">28件</p>
+            <p style="font-size:10px;color:rgba(255,255,255,.7);margin-top:4px;">初月獲得数 / 他社経験者超え</p>
+          </div>
+          <div style="background:rgba(255,255,255,.15);padding:20px 24px;text-align:center;border:1px solid rgba(255,255,255,.3);">
+            <p style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.7);letter-spacing:.15em;margin-bottom:6px;">2ヶ月目（進行中）</p>
+            <p style="font-size:22px;font-weight:900;color:#fff;line-height:1;">42件</p>
+            <p style="font-size:10px;color:rgba(255,255,255,.7);margin-top:4px;">2ヶ月目 / 前月比+50%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M.T：タイムライン横型カード -->
+  <div class="rv" style="background:var(--navy-card);border:1px solid var(--rules);margin-bottom:16px;overflow:hidden;">
+    <div style="padding:28px 32px 0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+        <div>
+          <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.32em;color:var(--red);text-transform:uppercase;margin-bottom:8px;">MEMBER 02 — TRANSFORMATION</p>
+          <p style="font-size:22px;font-weight:900;color:var(--w);margin-bottom:2px;letter-spacing:-.01em;">M.T <span style="font-size:13px;font-weight:400;color:var(--wd);">/ 20代</span></p>
+          <p style="font-family:'Space Mono',monospace;font-size:9px;color:var(--wd);letter-spacing:.14em;">現場未経験・営業経験ほぼゼロ</p>
+        </div>
+        <div style="text-align:right;">
+          <p style="font-family:'Space Mono',monospace;font-size:8px;color:var(--wd);letter-spacing:.12em;margin-bottom:4px;">3ヶ月目の最高記録</p>
+          <p style="font-size:52px;font-weight:900;color:var(--red);line-height:1;font-family:'Space Mono',monospace;">7<span style="font-size:22px;color:var(--wd);font-weight:400;">件/日</span></p>
+        </div>
+      </div>
+    </div>
+    <!-- タイムラインバー -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--rule);">
+      <div style="padding:20px 24px;border-right:1px solid var(--rule);position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--navy-mid);"></div>
+        <p style="font-family:'Space Mono',monospace;font-size:8px;color:var(--wd);letter-spacing:.15em;margin-bottom:8px;">1ヶ月目</p>
+        <p style="font-size:32px;font-weight:900;color:var(--wd);line-height:1;margin-bottom:4px;">0<span style="font-size:14px;color:var(--wd);font-weight:400;">件</span></p>
+        <p style="font-size:10px;color:var(--wd);">研修前・未獲得</p>
+      </div>
+      <div style="padding:20px 24px;border-right:1px solid var(--rule);position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--red);opacity:.5;"></div>
+        <p style="font-family:'Space Mono',monospace;font-size:8px;color:var(--wd);letter-spacing:.15em;margin-bottom:8px;">2ヶ月目</p>
+        <p style="font-size:32px;font-weight:900;color:var(--w);line-height:1;margin-bottom:4px;">3<span style="font-size:14px;color:var(--wd);font-weight:400;">件</span></p>
+        <p style="font-size:10px;color:var(--red);">研修翌日から獲得開始</p>
+      </div>
+      <div style="padding:20px 24px;position:relative;background:rgba(200,16,46,.08);">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--red);"></div>
+        <p style="font-family:'Space Mono',monospace;font-size:8px;color:var(--wd);letter-spacing:.15em;margin-bottom:8px;">3ヶ月目</p>
+        <p style="font-size:32px;font-weight:900;color:var(--red);line-height:1;margin-bottom:4px;">7<span style="font-size:14px;color:var(--wd);font-weight:400;">件</span></p>
+        <p style="font-size:10px;color:var(--wd);">研修2ヶ月目で急成長</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- A.H：プレステージ・センター型カード -->
+  <div class="rv" style="background:var(--navy);border:1px solid var(--rules);overflow:hidden;position:relative;">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),transparent);"></div>
+    <div style="position:absolute;bottom:0;right:0;width:180px;height:180px;border:1px solid rgba(200,16,46,.15);border-radius:50%;transform:translate(60px,60px);"></div>
+    <div style="position:absolute;bottom:0;right:0;width:280px;height:280px;border:1px solid rgba(200,16,46,.08);border-radius:50%;transform:translate(100px,100px);"></div>
+    <div style="position:relative;z-index:1;padding:36px 36px;">
+      <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.32em;color:var(--red);text-transform:uppercase;margin-bottom:16px;">MEMBER 03 — TOP PERFORMER</p>
+      <div style="display:flex;align-items:flex-start;gap:48px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:220px;">
+          <p style="font-size:22px;font-weight:900;color:var(--w);margin-bottom:4px;">A.H <span style="font-size:13px;font-weight:400;color:var(--wd);">/ 30代</span></p>
+          <p style="font-family:'Space Mono',monospace;font-size:9px;color:var(--wd);letter-spacing:.14em;margin-bottom:20px;">現場未経験・営業経験あり</p>
+          <p style="font-size:13px;color:var(--wd);line-height:1.85;">1年で現場のトップセールスへ到達。複数の企業から引っ張り凧になるほどの実力を証明。<strong style="color:var(--w);">結果を出し続けている人の背中が、最大の教材になる。</strong>UBASEでは今後、こうした先輩から学べる機会も作っていく予定です。</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;min-width:180px;">
+          <div style="text-align:center;padding:20px;border:1px solid rgba(200,16,46,.3);">
+            <p style="font-family:'Space Mono',monospace;font-size:8px;color:var(--wd);letter-spacing:.15em;margin-bottom:8px;">到達期間</p>
+            <p style="font-size:40px;font-weight:900;color:var(--w);line-height:1;">1<span style="font-size:16px;color:var(--wd);font-weight:400;">年</span></p>
+            <p style="font-size:10px;color:var(--red);margin-top:4px;">現場最高ランク</p>
+          </div>
+          <div style="text-align:center;padding:14px;background:rgba(200,16,46,.1);border:1px solid rgba(200,16,46,.2);">
+            <p style="font-size:11px;color:var(--wd);margin-bottom:2px;">複数社から</p>
+            <p style="font-size:14px;font-weight:700;color:var(--w);">複数社から出場依頼</p>
+          </div>
+          <div style="text-align:center;padding:14px;background:var(--navy-card);border:1px solid var(--rules);">
+            <p style="font-size:11px;color:var(--wd);margin-bottom:2px;">UBASEで</p>
+            <p style="font-size:14px;font-weight:700;color:var(--red);">今後、学べる機会を創設予定</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA after participants -->
+  <div class="rv" style="margin-top:32px;">
+    <a href="https://lin.ee/SdscxoK" class="btn" style="text-decoration:none;display:block;">LINEで詳細を受け取る</a>
+    <span class="btn-note">合う人だけ、面接でお待ちしています。</span>
+  </div>
+</div>
+</section>
+
+<!-- LINE INFO -->
+<section style="background:var(--navy-card);padding:64px 0;border-bottom:1px solid var(--rule);">
+<div class="wrap">
+  <div class="rv" style="text-align:center;margin-bottom:40px;">
+    <div class="bar" style="margin:0 auto 24px;"></div>
+    <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.28em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:12px;">LINE Official</span>
+    <h2 style="font-weight:700;font-size:clamp(20px,4vw,28px);line-height:1.45;margin-bottom:14px;">LINEに登録すると、<br>何が確認できますか？</h2>
+    <p style="font-size:13px;color:var(--wd);line-height:1.9;max-width:440px;margin:0 auto;">UBASEの詳細はLINE公式にて動画でお伝えしています。<br>テキストでは伝えきれないリアルな環境・雰囲気・代表の想いを<br>動画でご確認ください。</p>
+  </div>
+  <div style="display:grid;gap:3px;" class="cascade">
+    <div style="background:var(--navy);padding:24px 22px;display:flex;align-items:flex-start;gap:18px;border-left:2px solid var(--red);">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red);line-height:1;flex-shrink:0;">01</span>
+      <div>
+        <p style="font-size:14px;font-weight:700;color:var(--w);margin-bottom:5px;">動画でUBASEの全貌を確認できる</p>
+        <p style="font-size:12px;color:var(--wd);line-height:1.8;">UBASEがどんな環境か、誰に向いているか、何が得られるか。テキストではなく動画で伝えます。まず1本目を見てください。</p>
+      </div>
+    </div>
+    <div style="background:var(--navy);padding:24px 22px;display:flex;align-items:flex-start;gap:18px;border-left:2px solid rgba(200,16,46,.35);">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red);line-height:1;flex-shrink:0;">02</span>
+      <div>
+        <p style="font-size:14px;font-weight:700;color:var(--w);margin-bottom:5px;">参画までの流れ・よくある質問を確認できる</p>
+        <p style="font-size:12px;color:var(--wd);line-height:1.8;">面接の内容・日程・参画後の流れを詳しくお伝えしています。不安な点はLINE内で解消してから進んでください。</p>
+      </div>
+    </div>
+    <div style="background:rgba(200,16,46,.08);border:1px solid rgba(200,16,46,.3);padding:24px 22px;display:flex;align-items:flex-start;gap:18px;">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red);line-height:1;flex-shrink:0;">03</span>
+      <div>
+        <p style="font-size:14px;font-weight:700;color:var(--w);margin-bottom:5px;">参画したい方はそのままエントリーできる</p>
+        <p style="font-size:12px;color:var(--wd);line-height:1.8;">動画を見てUBASEに入りたいと思った方は、そのままエントリーフォームに進んでください。面接の日程を調整します。</p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:28px;" class="rv">
+    <a href="https://lin.ee/SdscxoK" class="btn" style="text-decoration:none;display:block;">LINEで詳細を受け取る</a>
+    <span class="btn-note">合う人だけ、面接でお待ちしています。</span>
+  </div>
+</div>
+</section>
+
+<!-- LINE FLOW -->
+<section class="alt">
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">10</span>
+  <h2 class="sh">登録後の流れ</h2>
+  <div class="lf-steps rv">
+    <div class="lf-step">
+      <div class="lf-step-title">LINEを登録する</div>
+      <div class="lf-step-body">ボタンをタップしてLINE公式アカウントを友だち追加してください。自動メッセージが届きます。</div>
+    </div>
+    <div class="lf-step">
+      <div class="lf-step-title">エントリーフォームに回答する</div>
+      <div class="lf-step-body">自動メッセージが届きます。LINE公式内の情報を確認した上で、フォームにお答えください。</div>
+    </div>
+    <div class="lf-step accent">
+      <div class="lf-step-title">対面面接（約60分）</div>
+      <div class="lf-step-body">名古屋市中区丸の内のオフィスにてお待ちしています。面接に来る方には本気の覚悟を持っていて欲しいと考えています。</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FIT -->
+<section class="alt">
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">11</span>
+  <h2 class="sh">求めるのは、やる気と素直さだけ。</h2>
+  <div class="fg rv">
+    <div class="fc no"><div class="fct">Not Welcome</div>
+      <ul class="fll">
+        <li><span class="mk">✖</span>副業・片手間として関わりたい（本業フルコミット限定）</li>
+        <li><span class="mk">✖</span>楽して稼ぎたい・すぐに結果を求める</li>
+        <li><span class="mk">✖</span>素直に吸収する姿勢がない</li>
+      </ul>
+    </div>
+    <div class="fc yes"><div class="fct">Welcome</div>
+      <ul class="fll">
+        <li><span class="mk">✔</span>一度独立を試みたが、途中で諦めた経験がある</li>
+        <li><span class="mk">✔</span>変わりたいと思いながら、一歩踏み出せていない</li>
+        <li><span class="mk">✔</span>本業フルコミットで本気で独立を目指している</li>
+        <li><span class="mk">✔</span>名古屋市丸の内オフィスに定期的に来られる</li>
+        <li><span class="mk">✔</span>どんな事業でも戦える基礎力を身につけたい</li>
+        <li><span class="mk">✔</span>素直に学んで、本気で実践できる</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- TONE BRIDGE -->
+<section style="padding:48px 0;background:var(--navy);">
+<div class="wrap">
+  <div style="text-align:center;max-width:480px;margin:0 auto;" class="rv">
+    <p style="font-size:16px;font-weight:700;color:var(--w);line-height:1.75;margin-bottom:16px;">話を聞くだけなら、誰でもできます。<br>面接に来る人には本気の覚悟を持っていて欲しい。</p>
+    <p style="font-size:13px;color:var(--wd);line-height:1.9;">UBASEは「とりあえず気になった」という人より、<br>「ここで変わりたい」と心が動いた人を求めています。<br>今期の受け入れは10名限定。まずLINE公式で情報を確認してください。</p>
+  </div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section>
+<div class="wrap">
+  <div class="bar"></div>
+  <span class="slbl">12</span>
+  <h2 class="sh">よくある不安に、正直に答えます。</h2>
+  <div class="fql">
+    <div class="fqi"><div class="fqq">名古屋在住でないといけませんか？<span class="fqic">+</span></div><div class="fqa">名古屋在住である必要はありません。ただし、育成のためUBASEは対面を重視しています。名古屋市丸の内のオフィスに定期的に来られる方であれば参画可能です。</div></div>
+    <div class="fqi"><div class="fqq">本当に費用はかかりませんか？<span class="fqic">+</span></div><div class="fqa">参画にあたって費用は一切かかりません。まずLINEで情報を確認してから決断してください。</div></div>
+    <div class="fqi"><div class="fqq">営業未経験でも大丈夫ですか？<span class="fqic">+</span></div><div class="fqa">問題ありません。研修はゼロから設計されています。必要なのは経験ではなく、やる気と素直さです。</div></div>
+    <div class="fqi"><div class="fqq">今の仕事を辞める必要はありますか？<span class="fqic">+</span></div><div class="fqa">はい、辞めていただく必要があります。在職しながらの参画はお断りしています。UBASEはお金ではなく、覚悟を入会基準にしています。その覚悟の証明として、退職という決断を求めています。</div></div>
+    <div class="fqi"><div class="fqq">怪しいビジネスではないですか？<span class="fqic">+</span></div><div class="fqa">MLMやネットワークビジネスとは一切関係ありません。toBまたはtoCのフィールドセールスを行っていただきます。あなたのスキル感に応じて、適した事業を選定させていただきます。</div></div>
+    <div class="fqi"><div class="fqq">本当に独立できますか？<span class="fqic">+</span></div><div class="fqa">ビジネスに100%はないため、保証はしません。ただし、やる気と素直さがあれば独立への可能性は格段に上がります。あなたが諦めない限り私たちも諦めません。そんな本気の環境をUBASEは用意しています。</div></div>
+    <div class="fqi"><div class="fqq">最初の報酬の受け取りはいつですか？<span class="fqic">+</span></div><div class="fqa">報酬サイクルは月末締め・翌々月頭払いです。稼働開始から最初の報酬受け取りまで最大2.5ヶ月かかります。参画前に生活資金が確保できるかをご確認ください。確保できない場合はご相談も可能です。</div></div>
+  </div>
+</div>
+</section>
+
+<!-- DECISIVE ACTION -->
+<section style="padding:56px 0;background:var(--navy-card);border-bottom:1px solid var(--rule);">
+<div class="wrap">
+  <div class="rv" style="max-width:520px;margin:0 auto;">
+    <div class="bar" style="margin:0 auto 28px;"></div>
+    <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.28em;color:var(--red);text-transform:uppercase;text-align:center;margin-bottom:20px;">On Decision</p>
+    <p style="font-size:16px;font-weight:700;color:var(--w);line-height:1.75;text-align:center;margin-bottom:20px;">チャンスは、待ってくれません。</p>
+    <p style="font-size:13px;color:var(--wd);line-height:1.9;text-align:center;">急に訪れた機会を掴めるかどうかも、<br>プロとしての素質のひとつです。<br><br>迷っている時間は、あなたの人生にはありません。<br>覚悟が決まった人から、動いてください。</p>
+  </div>
+</div>
+</section>
+
+<!-- CLOSING -->
+<section id="closing">
+<div class="wrap">
+  <span class="ce">Final Message</span>
+  <h2 class="ch pop-up">今、このページを読んでいる<br>あなたへ。</h2>
+  <p class="cb rv">
+    ここまで読んでくれたということは、<br>
+    何かが引っかかったはずです。<br><br>
+    その感覚を、信じてください。<br><br>
+    変わりたいと思い続けて、<br>
+    でも変われなかった。<br>
+    その悔しさを持っている人が、<br>
+    <strong style="color:var(--red);">一番強くなれる。</strong><br><br>
+    UBASEはその環境を、<br>
+    本気で用意しています。
+  </p>
+  <div style="margin:0 auto 20px;max-width:400px;" class="rv">
+    <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--wd);text-transform:uppercase;margin-bottom:14px;text-align:center;">今期の受け入れ枠 / 10名限定</p>
+    <a href="https://lin.ee/SdscxoK" class="btn" style="text-decoration:none;display:block;">LINEで詳細を受け取る</a>
+    <span class="btn-note" style="display:block;text-align:center;margin-top:8px;">合う人だけ、面接でお待ちしています。</span>
+  </div>
+</div>
+</section>
+
+<footer>
+<div class="wrap">
+  <div class="fi">
+    <div class="flogo">U<span class="r">B</span>ASE</div>
+    <div class="finf">NAGOYA / 業務委託<br>独立特化の実践コミュニティ</div>
+  </div>
+</div>
+</footer>
+
+<script>
+// ── PARTICLES ──────────────────────────────────────────────
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H;
+const particles = Array.from({length:20}, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  r: Math.random() * 1.4 + 0.3,
+  dx: (Math.random() - .5) * .3,
+  dy: (Math.random() - .5) * .3,
+  o: Math.random() * .4 + .1,
+}));
+function resizeCanvas() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(200,16,46,${p.o})`; ctx.fill();
+    p.x += p.dx; p.y += p.dy;
+    if (p.x < 0 || p.x > W) p.dx *= -1;
+    if (p.y < 0 || p.y > H) p.dy *= -1;
+  });
+  particles.forEach((a, i) => particles.slice(i+1).forEach(b => {
+    const d = Math.hypot(a.x-b.x, a.y-b.y);
+    if (d < 90) {
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle = `rgba(200,16,46,${.07*(1-d/90)})`; ctx.lineWidth=.5; ctx.stroke();
+    }
+  }));
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── SCROLL PROGRESS BAR ────────────────────────────────────
+const pbar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  pbar.style.width = (scrollY / (document.body.scrollHeight - innerHeight) * 100) + '%';
+  // Float badge
+  const badge = document.getElementById('float-badge');
+  if (badge) badge.classList.toggle('v', scrollY > 600);
+}, {passive:true});
+
+// ── COUNTUP ────────────────────────────────────────────────
+function countUp(el, target, suffix='', duration=1800) {
+  let start = null;
+  const step = ts => {
+    if (!start) start = ts;
+    const p = Math.min((ts-start)/duration, 1);
+    const ease = 1 - Math.pow(1-p, 3);
+    el.textContent = (target%1 ? (target*ease).toFixed(1) : Math.floor(target*ease)) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// ── COUNTDOWN (for ¥0 effect) ─────────────────────────────
+function countDown(el, from, duration=1800) {
+  let start = null;
+  const step = ts => {
+    if (!start) start = ts;
+    const p = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const val = Math.floor(from * (1 - ease));
+    el.textContent = '¥' + val.toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = '¥0';
+  };
+  el.textContent = '¥' + from.toLocaleString();
+  requestAnimationFrame(step);
+}
+
+// ── RING CHART ANIMATION ────────────────────────────────────
+function animateRings(container) {
+  const circumference = 290;
+  container.querySelectorAll('.ring-circle').forEach(circle => {
+    const offset = parseFloat(circle.dataset.offset);
+    const dashOffset = circumference - (circumference * (100 - offset) / 100);
+    setTimeout(() => { circle.style.strokeDashoffset = dashOffset; }, 300);
+  });
+  container.querySelectorAll('.ring-num').forEach(el => {
+    const target = parseFloat(el.dataset.ring);
+    countUp(el, target, '', 1600);
+  });
+}
+
+// ── BAR CHART ─────────────────────────────────────────────
+function animateBars(container) {
+  container.querySelectorAll('.bar-fill').forEach((fill, i) => {
+    setTimeout(() => { fill.style.width = fill.dataset.pct + '%'; }, i * 180);
+  });
+}
+
+// ── SPLIT TEXT ────────────────────────────────────────────
+function splitText(el) {
+  const text = el.textContent;
+  el.innerHTML = text.split('').map((c, i) =>
+    `<span class="split-char" style="transition-delay:${i * 40}ms">${c === ' ' ? '&nbsp;' : c}</span>`
+  ).join('');
+  setTimeout(() => el.querySelectorAll('.split-char').forEach(s => s.classList.add('v')), 100);
+}
+
+// ── INTERSECTION OBSERVER FACTORY ─────────────────────────
+function makeObs(fn, opts={}) {
+  return new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { fn(e.target); } });
+  }, {threshold:.08, ...opts});
+}
+
+// General reveal (rv, slide-left, slide-right, zoom-in, flip-up)
+const revObs = makeObs(el => {
+  el.classList.add('v');
+  revObs.unobserve(el);
+});
+document.querySelectorAll('.rv,.slide-left,.slide-right,.zoom-in,.flip-up').forEach(el => revObs.observe(el));
+
+// Empathy list stagger
+const empObs = makeObs(el => {
+  el.querySelectorAll('li').forEach((li, i) => setTimeout(() => li.classList.add('v'), i * 100));
+  empObs.unobserve(el);
+});
+const empEl = document.querySelector('.el');
+if (empEl) empObs.observe(empEl);
+
+// Pillars stagger
+const pObs = makeObs(el => {
+  el.querySelectorAll('.pillar').forEach((p, i) => setTimeout(() => p.classList.add('v'), i * 130));
+  pObs.unobserve(el);
+});
+const plEl = document.querySelector('.pillars');
+if (plEl) pObs.observe(plEl);
+
+// Client cards stagger with tilt prep
+const crObs = makeObs(el => {
+  el.querySelectorAll('.cr-card').forEach((c, i) => setTimeout(() => c.classList.add('v'), i * 160));
+  crObs.unobserve(el);
+});
+const crGrid = document.querySelector('.cr-grid');
+if (crGrid) crObs.observe(crGrid);
+
+// Trust grid stagger
+const tgObs = makeObs(el => {
+  el.querySelectorAll('.ti').forEach((ti, i) => {
+    ti.style.opacity = '0'; ti.style.transform = 'translateY(16px)';
+    ti.style.transition = `opacity .5s ease ${i*.1}s,transform .5s ease ${i*.1}s`;
+    setTimeout(() => { ti.style.opacity = '1'; ti.style.transform = 'none'; }, i * 100 + 50);
+  });
+  tgObs.unobserve(el);
+}, {threshold:.2});
+const tg = document.querySelector('.tg');
+if (tg) tgObs.observe(tg);
+
+// Hero ¥0 countdown on load
+window.addEventListener('DOMContentLoaded', () => {
+  const hz = document.getElementById('hero-zero');
+  if (hz) {
+    hz.textContent = '¥99,800';
+    setTimeout(() => countDown(hz, 99800, 1400), 600);
+  }
+});
+
+// Countup on stats
+const statObs = makeObs(el => {
+  el.querySelectorAll('[data-count]').forEach(e => countUp(e, parseFloat(e.dataset.count), e.dataset.suffix||''));
+  statObs.unobserve(el);
+}, {threshold:.3});
+document.querySelectorAll('.stats').forEach(el => statObs.observe(el));
+
+// Bar charts
+const barObs = makeObs(el => {
+  animateBars(el);
+  barObs.unobserve(el);
+}, {threshold:.2});
+document.querySelectorAll('.bar-chart').forEach(el => barObs.observe(el));
+
+// Stagger member cards
+const memObs = makeObs(el => {
+  el.querySelectorAll('[data-mem]').forEach((m, i) => {
+    m.style.opacity = '0'; m.style.transform = 'translateY(24px)';
+    m.style.transition = `opacity .6s ease ${i*.15}s,transform .6s cubic-bezier(.22,1,.36,1) ${i*.15}s`;
+    setTimeout(() => { m.style.opacity='1'; m.style.transform='none'; }, i*150+100);
+  });
+  memObs.unobserve(el);
+}, {threshold:.05});
+const memSection = document.querySelector('#mem-section');
+if (memSection) memObs.observe(memSection);
+
+// Lf-steps stagger
+const lfObs = makeObs(el => {
+  el.querySelectorAll('.lf-step').forEach((s, i) => {
+    s.style.opacity='0'; s.style.transform='translateX(-20px)';
+    s.style.transition=`opacity .5s ease ${i*.12}s,transform .5s ease ${i*.12}s`;
+    setTimeout(() => { s.style.opacity='1'; s.style.transform='none'; }, i*120+100);
+  });
+  lfObs.unobserve(el);
+});
+const lfEl = document.querySelector('.lf-steps');
+if (lfEl) lfObs.observe(lfEl);
+
+// ── FIXED CTA ─────────────────────────────────────────────
+const fc = document.getElementById('fcta');
+window.addEventListener('scroll', () => fc.classList.toggle('v', scrollY > 300), {passive:true});
+
+// ── FAQ ────────────────────────────────────────────────────
+document.querySelectorAll('.fqq').forEach(q => {
+  q.addEventListener('click', () => {
+    const it = q.parentElement, op = it.classList.contains('op');
+    document.querySelectorAll('.fqi').forEach(i => i.classList.remove('op'));
+    if (!op) it.classList.add('op');
+  });
+});
+
+
+
+
+// ── CASCADE OBSERVER ─────────────────────────────────────
+const cascadeObs = makeObs(el => {
+  el.classList.add('v');
+  cascadeObs.unobserve(el);
+}, {threshold:.1});
+document.querySelectorAll('.cascade').forEach(el => cascadeObs.observe(el));
+
+// ── SNAP-ENTER OBSERVER ──────────────────────────────────
+const snapObs = makeObs(el => {
+  el.classList.add('v');
+  snapObs.unobserve(el);
+}, {threshold:.08});
+document.querySelectorAll('.snap-enter').forEach(el => snapObs.observe(el));
+
+// ── POP-UP OBSERVER ───────────────────────────────────────
+const popObs = makeObs(el => {
+  el.classList.add('v');
+  popObs.unobserve(el);
+}, {threshold:.1});
+document.querySelectorAll('.pop-up').forEach(el => popObs.observe(el));
+
+// ── LINE DRAW OBSERVER ────────────────────────────────────
+const lineObs = makeObs(el => {
+  el.classList.add('v');
+  lineObs.unobserve(el);
+}, {threshold:.3});
+document.querySelectorAll('.line-draw').forEach(el => lineObs.observe(el));
+
+// ── COUNT BOXES ───────────────────────────────────────────
+const countBoxObs = makeObs(el => {
+  el.querySelectorAll('[data-count]').forEach((e, i) => {
+    const val = parseFloat(e.dataset.count);
+    const suf = e.dataset.suffix || '';
+    const prefix = e.dataset.prefix || '';
+    if (prefix === '¥') {
+      setTimeout(() => countDown(e, 99800, 1800), i * 200);
+    } else {
+      setTimeout(() => countUp(e, val, suf, 1600), i * 200);
+    }
+    // Add flip animation
+    e.classList.add('flip-stat');
+  });
+  countBoxObs.unobserve(el);
+}, {threshold:.3});
+document.querySelectorAll('.count-box').forEach(el => countBoxObs.observe(el));
+
+// ── SHAKE on FAQ open ─────────────────────────────────────
+document.querySelectorAll('.fqq').forEach(q => {
+  q.addEventListener('click', () => {
+    const ic = q.querySelector('.fqic');
+    if (ic) { ic.classList.add('shake'); setTimeout(() => ic.classList.remove('shake'), 500); }
+  });
+});
+
+// ── MOBILE: vibrate on CTA tap ────────────────────────────
+document.querySelectorAll('.btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (navigator.vibrate) navigator.vibrate(30);
+  });
+});
+
+// ── HIGHLIGHT FLASH on visible numbers ────────────────────
+const hlObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('highlight-flash');
+      hlObs.unobserve(e.target);
+    }
+  });
+}, {threshold:.8});
+document.querySelectorAll('.count-box-num,.ssa.hi').forEach(el => hlObs.observe(el));
+
+// ── AUTO-OPEN first FAQ on mobile ─────────────────────────
+if (innerWidth < 640) {
+  const firstFaq = document.querySelector('.fqi');
+  if (firstFaq) setTimeout(() => firstFaq.classList.add('op'), 2000);
+}
+
+</script>
+</body>
+</html>
