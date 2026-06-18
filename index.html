@@ -181,8 +181,8 @@ section.alt{background:var(--navy-mid);}
 .fqq{padding:20px 18px;font-size:13px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;user-select:none;font-family:'Noto Sans JP',sans-serif;}
 .fqic{font-family:'Space Mono',monospace;font-size:16px;color:var(--red);flex-shrink:0;transition:transform .3s cubic-bezier(.22,1,.36,1);width:20px;text-align:center;}
 .fqi.op .fqic{transform:rotate(45deg);}
-.fqa{max-height:0;overflow:hidden;padding:0 20px;transition:max-height .4s cubic-bezier(.22,1,.36,1),padding .35s;}
-.fqi.op .fqa{max-height:300px;padding:0 18px 20px;}
+.fqa{max-height:0;overflow:hidden;padding:0 18px;font-size:13px;line-height:1.75;transition:max-height .4s cubic-bezier(.22,1,.36,1);}
+.fqi.op .fqa{max-height:800px;padding:0 18px 20px;}
 .fqi.op{background:var(--navy-l);border-left:2px solid var(--red);}
 
 /* ── CLIENT RESULTS ── */
@@ -510,7 +510,8 @@ footer{padding:32px 0;border-top:1px solid var(--rule);}
 
   /* FAQ */
   .fqq{font-size:13px!important;padding:14px 16px!important;}
-  .fqi.op .fqa{font-size:12px!important;padding:10px 14px 14px!important;}
+  .fqa{font-size:13px;padding:0 14px;}
+  .fqi.op .fqa{padding:0 14px 16px!important;}
 
   /* PROFILE */
   .pro{grid-template-columns:70px 1fr!important;gap:14px!important;align-items:start!important;}
