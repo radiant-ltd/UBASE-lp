@@ -176,14 +176,14 @@ section.alt{background:var(--navy-mid);}
 
 /* ── FAQ ENHANCED ── */
 .fql{display:flex;flex-direction:column;gap:3px;}
-.fqi{background:var(--navy-card);overflow:hidden;transition:background .2s;}
+.fqi{background:var(--navy-card);overflow:hidden;border-left:2px solid transparent;transition:background .35s, border-left-color .35s;}
 .fqi:hover{background:var(--navy-l);}
 .fqq{padding:20px 18px;font-size:13px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;user-select:none;font-family:'Noto Sans JP',sans-serif;}
 .fqic{font-family:'Space Mono',monospace;font-size:16px;color:var(--red);flex-shrink:0;transition:transform .3s cubic-bezier(.22,1,.36,1);width:20px;text-align:center;}
 .fqi.op .fqic{transform:rotate(45deg);}
 .fqa{max-height:0;overflow:hidden;padding:0 18px;font-size:13px;line-height:1.75;transition:max-height .4s cubic-bezier(.22,1,.36,1);}
 .fqi.op .fqa{max-height:800px;padding:0 18px 20px;}
-.fqi.op{background:var(--navy-l);border-left:2px solid var(--red);}
+.fqi.op{background:var(--navy-l);border-left-color:var(--red);}
 
 /* ── CLIENT RESULTS ── */
 .cr-intro{font-size:13px;color:var(--wd);line-height:1.9;margin-bottom:8px;}
