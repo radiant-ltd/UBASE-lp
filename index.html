@@ -176,14 +176,14 @@ section.alt{background:var(--navy-mid);}
 
 /* ── FAQ ENHANCED ── */
 .fql{display:flex;flex-direction:column;gap:3px;}
-.fqi{background:var(--navy-card);overflow:hidden;border-left:2px solid transparent;transition:background .35s, border-left-color .35s;}
+.fqi{background:var(--navy-card);border-left:2px solid transparent;display:grid;grid-template-rows:auto 0fr;transition:grid-template-rows .38s cubic-bezier(.4,0,.2,1),background .35s,border-left-color .35s;}
 .fqi:hover{background:var(--navy-l);}
 .fqq{padding:20px 18px;font-size:13px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;user-select:none;font-family:'Noto Sans JP',sans-serif;}
 .fqic{font-family:'Space Mono',monospace;font-size:16px;color:var(--red);flex-shrink:0;transition:transform .3s cubic-bezier(.22,1,.36,1);width:20px;text-align:center;}
 .fqi.op .fqic{transform:rotate(45deg);}
-.fqa{max-height:0;overflow:hidden;padding:0 18px;font-size:13px;line-height:1.75;transition:max-height .38s cubic-bezier(.4,0,.2,1);}
+.fqa{min-height:0;overflow:hidden;padding:0 18px;font-size:13px;line-height:1.75;}
 .fqi.op .fqa{padding:0 18px 20px;}
-.fqi.op{background:var(--navy-l);border-left-color:var(--red);}
+.fqi.op{background:var(--navy-l);border-left-color:var(--red);grid-template-rows:auto 1fr;}
 
 /* ── CLIENT RESULTS ── */
 .cr-intro{font-size:13px;color:var(--wd);line-height:1.9;margin-bottom:8px;}
@@ -1591,46 +1591,13 @@ if (lfEl) lfObs.observe(lfEl);
 const fc = document.getElementById('fcta');
 window.addEventListener('scroll', () => fc.classList.toggle('v', scrollY > 300), {passive:true});
 
-// ── FAQ（開閉どちらも滑らか・scrollHeight方式） ────────────
-function openFaq(it, fqa) {
-  it.classList.add('op');           // 先にクラスを付ける（padding適用）
-  const h = fqa.scrollHeight;      // padding込みの高さを計測
-  fqa.style.maxHeight = '0px';     // 一旦0にリセット
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {   // 2フレーム待って確実に0から開始
-      fqa.style.maxHeight = h + 'px';
-    });
-  });
-}
-
-function closeFaq(it, fqa) {
-  fqa.style.maxHeight = fqa.scrollHeight + 'px'; // 現在の高さから
-  requestAnimationFrame(() => {
-    fqa.style.maxHeight = '0px';   // 0へアニメーション
-  });
-  setTimeout(() => {
-    it.classList.remove('op');     // アニメーション完了後にクラス削除
-  }, 400);                         // transitionの時間と合わせる
-}
-
+// ── FAQ（CSSグリッド方式・JS不要でスムーズ） ─────────────
 document.querySelectorAll('.fqq').forEach(q => {
   q.addEventListener('click', () => {
     const it = q.parentElement;
     const isOpen = it.classList.contains('op');
-    const fqa = it.querySelector('.fqa');
-
-    // 他を全て閉じる
-    document.querySelectorAll('.fqi').forEach(i => {
-      if (i !== it && i.classList.contains('op')) {
-        closeFaq(i, i.querySelector('.fqa'));
-      }
-    });
-
-    if (!isOpen) {
-      openFaq(it, fqa);
-    } else {
-      closeFaq(it, fqa);
-    }
+    document.querySelectorAll('.fqi').forEach(i => i.classList.remove('op'));
+    if (!isOpen) it.classList.add('op');
   });
 });
 
