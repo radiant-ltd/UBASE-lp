@@ -181,8 +181,8 @@ section.alt{background:var(--navy-mid);}
 .fqq{padding:20px 18px;font-size:13px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;user-select:none;font-family:'Noto Sans JP',sans-serif;}
 .fqic{font-family:'Space Mono',monospace;font-size:16px;color:var(--red);flex-shrink:0;transition:transform .3s cubic-bezier(.22,1,.36,1);width:20px;text-align:center;}
 .fqi.op .fqic{transform:rotate(45deg);}
-.fqa{max-height:0;overflow:hidden;padding:0 18px;font-size:13px;line-height:1.75;transition:max-height .4s cubic-bezier(.22,1,.36,1);}
-.fqi.op .fqa{max-height:800px;padding:0 18px 20px;}
+.fqa{max-height:0;overflow:hidden;padding:0 18px;font-size:13px;line-height:1.75;transition:max-height .38s cubic-bezier(.4,0,.2,1);}
+.fqi.op .fqa{padding:0 18px 20px;}
 .fqi.op{background:var(--navy-l);border-left-color:var(--red);}
 
 /* ── CLIENT RESULTS ── */
@@ -1591,15 +1591,41 @@ if (lfEl) lfObs.observe(lfEl);
 const fc = document.getElementById('fcta');
 window.addEventListener('scroll', () => fc.classList.toggle('v', scrollY > 300), {passive:true});
 
-// ── FAQ ────────────────────────────────────────────────────
+// ── FAQ（scrollHeight方式・開閉どちらも滑らか） ────────────
 document.querySelectorAll('.fqq').forEach(q => {
   q.addEventListener('click', () => {
-    const it = q.parentElement, op = it.classList.contains('op');
-    document.querySelectorAll('.fqi').forEach(i => i.classList.remove('op'));
-    if (!op) it.classList.add('op');
+    const it = q.parentElement;
+    const isOpen = it.classList.contains('op');
+    const fqa = it.querySelector('.fqa');
+
+    // 他の全てを閉じる
+    document.querySelectorAll('.fqi').forEach(i => {
+      if (i !== it) {
+        const a = i.querySelector('.fqa');
+        if (a) {
+          a.style.maxHeight = a.scrollHeight + 'px'; // 現在の高さから
+          requestAnimationFrame(() => {
+            a.style.maxHeight = '0';
+          });
+        }
+        i.classList.remove('op');
+      }
+    });
+
+    if (!isOpen) {
+      // 開く：実際のコンテンツ高さに設定
+      fqa.style.maxHeight = fqa.scrollHeight + 'px';
+      it.classList.add('op');
+    } else {
+      // 閉じる：現在の高さから0へ（実際の高さから始まるので滑らか）
+      fqa.style.maxHeight = fqa.scrollHeight + 'px';
+      requestAnimationFrame(() => {
+        fqa.style.maxHeight = '0';
+      });
+      it.classList.remove('op');
+    }
   });
 });
-
 
 
 
